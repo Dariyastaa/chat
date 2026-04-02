@@ -3,6 +3,8 @@
 #include <QMainWindow>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QList>
+#include <QMap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ServerWindow; }
@@ -20,11 +22,13 @@ private slots:
     void startServer();
     void newConnection();
     void readMessage();
-    void sendMessage();
     void clientDisconnected();
 
 private:
+    void broadcastMessage(const QString &message);
+
     Ui::ServerWindow *ui;
     QTcpServer *server;
-    QTcpSocket *socket;
+    QList<QTcpSocket*> clients;
+    QMap<QTcpSocket*, QString> nicknames;
 };

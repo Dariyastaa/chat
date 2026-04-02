@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientWindow; }
@@ -25,4 +26,5 @@ private slots:
 private:
     Ui::ClientWindow *ui;
     QTcpSocket *socket;
+    QString username;
 };

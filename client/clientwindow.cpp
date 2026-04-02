@@ -1,10 +1,31 @@
 #include "clientwindow.h"
 #include "ui_clientwindow.h"
+#include <QInputDialog>
+#include <QLineEdit>
 
 ClientWindow::ClientWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ClientWindow)
 {
     ui->setupUi(this);
+
+    bool ok;
+    username = QInputDialog::getText(
+        this,
+        "Ввод ника",
+        "Введите ваш ник:",
+        QLineEdit::Normal,
+        "",
+        &ok
+        );
+
+    username = username.trimmed();
+
+    if (!ok || username.isEmpty())
+    {
+        username = "Гость";
+    }
+
+    setWindowTitle("Клиент: " + username);
 
     socket = new QTcpSocket(this);
 
@@ -31,28 +52,35 @@ void ClientWindow::connectToServer()
 
 void ClientWindow::onConnected()
 {
-    ui->log->append("Подключено");
+    ui->log->append("Подключено к серверу");
     ui->sendButton->setEnabled(true);
+
+    QString nickMessage = "/nick " + username;
+    socket->write(nickMessage.toUtf8());
 }
 
 void ClientWindow::readMessage()
 {
     QByteArray data = socket->readAll();
-    ui->log->append("Сервер: " + QString::fromUtf8(data));
+    QString message = QString::fromUtf8(data);
+    ui->log->append(message);
 }
 
 void ClientWindow::sendMessage()
 {
     QString text = ui->input->text().trimmed();
-    if (text.isEmpty()) return;
 
-    socket->write(text.toUtf8());
-    ui->log->append("Клиент: " + text);
+    if (text.isEmpty())
+        return;
+
+    QString message = username + ": " + text;
+    socket->write(message.toUtf8());
+
     ui->input->clear();
 }
 
 void ClientWindow::onDisconnected()
 {
-    ui->log->append("Отключено");
+    ui->log->append("Отключено от сервера");
     ui->sendButton->setEnabled(false);
 }
