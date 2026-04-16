@@ -26,9 +26,16 @@ private slots:
 
 private:
     void broadcastMessage(const QString &message);
+    void broadcastLine(const QString &line);
+    QTcpSocket* findClientByNick(const QString &nick);
+    bool isNickTaken(const QString &nick);
 
     Ui::ServerWindow *ui;
     QTcpServer *server;
     QList<QTcpSocket*> clients;
     QMap<QTcpSocket*, QString> nicknames;
+    QMap<QTcpSocket*, QByteArray> buffers;
+    QMap<QTcpSocket*, QString> imageSenders;
+    QMap<QTcpSocket*, bool> receivingImageMap;
+    bool receivingImage = false;
 };

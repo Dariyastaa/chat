@@ -22,9 +22,17 @@ private slots:
     void readMessage();
     void sendMessage();
     void onDisconnected();
+    void sendImage();
+    void askNickname();
 
 private:
     Ui::ClientWindow *ui;
     QTcpSocket *socket;
     QString username;
+    QByteArray incomingImageData;
+    QString incomingSender;
+    bool receivingImage = false;
+    QByteArray buffer;
+    bool nicknameAccepted = false;
+    bool waitingNickReply = false;
 };

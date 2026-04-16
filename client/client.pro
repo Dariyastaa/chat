@@ -1,4 +1,4 @@
-QT += widgets network
+QT += core gui widgets network
 CONFIG += c++11
 
 QMAKE_POST_LINK += $$quote($$[QT_INSTALL_BINS]/windeployqt.exe $$OUT_PWD/release/client.exe)
